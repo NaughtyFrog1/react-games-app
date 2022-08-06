@@ -1,0 +1,17 @@
+/*
+  Bootstrap
+*/
+
+.form-control:focus {
+  border-color: #1a1e21;
+  box-shadow: 0 0 0 0.25rem rgba(66, 70, 73, 0.5);
+}
+
+/*
+  General
+*/
+
+#root {
+  height: 100vh;
+  background-color: #f2f2f2;
+}
