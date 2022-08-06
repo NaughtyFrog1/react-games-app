@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import {
   Button,
   ButtonGroup,
@@ -11,26 +11,17 @@ import { ReactComponent as RightArrow } from '../assets/bs-arrow-right.svg'
 import { isValidId } from '../helpers/validators'
 
 export default function Login() {
-  const [formValues, setFormValues] = useState({
-    gameType: '',
-    joinGameId: '',
-    reconnectGameId: '',
-    reconnectPlayerId: '',
-  })
+  const joinGameIdRef = useRef(null)
+  const reconnectGameIdRef = useRef(null)
+  const reconnectPlayerIdRef = useRef(null)
+  const [gameType, setGameType] = useState('')
+
   const [formErrors, setFormErrors] = useState({})
 
   const gameTypeRadios = [
     { name: 'Reversi', value: 'reversi' },
     { name: 'Battleship', value: 'battleship' },
   ]
-
-  function handleInputChange(e) {
-    setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.value }))
-  }
-
-  function handleRadioChange(newValue) {
-    setFormValues((prev) => ({ ...prev, gameType: newValue }))
-  }
 
   function handleCreate() {
     setFormErrors(validateGameType())
@@ -46,7 +37,7 @@ export default function Login() {
 
   function validateGameType() {
     const errors = {}
-    if (formValues.gameType === '') {
+    if (gameType === '') {
       errors.gameType = 'Choose the game you want to play'
     }
     return errors
@@ -54,9 +45,9 @@ export default function Login() {
 
   function validateJoin() {
     const errors = validateGameType()
-    if (formValues.joinGameId === '') {
+    if (joinGameIdRef.current.value === '') {
       errors.joinGameId = 'Game ID is required'
-    } else if (!isValidId(formValues.joinGameId)) {
+    } else if (!isValidId(joinGameIdRef.current.value)) {
       errors.joinGameId = 'Invalid Game ID'
     }
     return errors
@@ -64,14 +55,14 @@ export default function Login() {
 
   function validateReconnect() {
     const errors = validateGameType()
-    if (formValues.reconnectGameId === '') {
+    if (reconnectGameIdRef.current.value === '') {
       errors.reconnectGameId = 'Game ID is required'
-    } else if (!isValidId(formValues.reconnectGameId)) {
+    } else if (!isValidId(reconnectGameIdRef.current.value)) {
       errors.reconnectGameId = 'Invalid Game ID'
     }
-    if (formValues.reconnectPlayerId === '') {
+    if (reconnectPlayerIdRef.current.value === '') {
       errors.reconnectPlayerId = 'Player ID is required'
-    } else if (!isValidId(formValues.reconnectPlayerId)) {
+    } else if (!isValidId(reconnectPlayerIdRef.current.value)) {
       errors.reconnectPlayerId = 'Invalid Player ID'
     }
     return errors
@@ -93,13 +84,14 @@ export default function Login() {
                   type="radio"
                   variant="outline-dark"
                   value={value}
-                  checked={formValues.gameType === value}
-                  onClick={() => handleRadioChange(value)}
+                  checked={gameType === value}
+                  onClick={() => setGameType(value)}
                 >
                   {name}
                 </ToggleButton>
               ))}
             </ButtonGroup>
+
             <div className="text-danger">{formErrors.gameType}</div>
           </div>
           <div className="mb-3">
@@ -109,8 +101,7 @@ export default function Login() {
                 placeholder="Game ID"
                 type="text"
                 name="joinGameId"
-                value={formValues.joinGameId}
-                onInput={handleInputChange}
+                ref={joinGameIdRef}
               />
               <Button
                 className="lh-1"
@@ -132,15 +123,13 @@ export default function Login() {
                 placeholder="Game ID"
                 type="text"
                 name="reconnectGameId"
-                value={formValues.reconnectGameId}
-                onInput={handleInputChange}
+                ref={reconnectGameIdRef}
               />
               <Form.Control
                 placeholder="Player ID"
                 type="text"
                 name="reconnectPlayerId"
-                value={formValues.reconnectPlayerId}
-                onInput={handleInputChange}
+                ref={reconnectPlayerIdRef}
               />
               <Button
                 className="lh-1"
