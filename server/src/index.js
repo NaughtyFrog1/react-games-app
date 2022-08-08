@@ -5,15 +5,26 @@ const io = require('socket.io')(httpServer, {
   cors: { origin: ['http://localhost:3000'] },
 })
 
-const reversiHandler = require('./handlers/reversiHandler')
-const battleshipHandler = require('./handlers/battleshipHanlder')
+const {
+  reversiHandler,
+  reversiDisconnect,
+} = require('./handlers/reversiHandler')
 
 //* SETTINGS
 app.set('port', process.env.PORT || 3001)
 
 //* SOCKETS
-reversiHandler(io.of('/reversi'))
-battleshipHandler(io.of('/battleship'))
+io.on('connection', (socket) => {
+  socket.data.gameType = ''
+  socket.data.gameId = ''
+  socket.data.playerId = ''
+
+  reversiHandler(io, socket)
+
+  socket.on('disconnect', () => {
+    if (socket.data.gameType === 'reversi') reversiDisconnect(io, socket)
+  })
+})
 
 //* START SERVER
 httpServer.listen(app.get('port'), () => {
