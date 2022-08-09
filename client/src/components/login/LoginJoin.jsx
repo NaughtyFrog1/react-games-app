@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Form, InputGroup } from 'react-bootstrap'
-import { ReactComponent as RightArrow } from 'assets/bs-arrow-right.svg'
+import { ReactComponent as RightArrow } from 'assets/icons/bs-arrow-right.svg'
 import { isValidId } from 'helpers/validators'
 import { SOCKET_EMITERS, useSocket } from 'contexts/SocketProvider'
 
