@@ -12,6 +12,8 @@ module.exports = (
   }
 
   socket.on(`${gameType}:create`, () => {
+    console.log(`${gameType}:create`, { socketId: socket.id }, '\n')
+
     if (playersController.socketIsConnected(socket.id)) {
       socket.emit('login:error', ['You are already connected to a game'])
       return
@@ -24,6 +26,8 @@ module.exports = (
   })
 
   socket.on(`${gameType}:join`, (gameId) => {
+    console.log(`${gameType}:join`, { socketId: socket.id, gameId }, '\n')
+
     const errors = []
     if (playersController.socketIsConnected(socket.id)) {
       errors.push('You are already connected to a game')
@@ -45,6 +49,16 @@ module.exports = (
   })
 
   socket.on(`${gameType}:reconnect`, (playerId, gameId) => {
+    console.log(
+      `${gameType}:reconnect`,
+      {
+        socketId: socket.id,
+        playerId,
+        gameId,
+      },
+      '\n'
+    )
+
     const errors = []
     if (playersController.socketIsConnected(socket.id)) {
       errors.push('You are already connected to a game')

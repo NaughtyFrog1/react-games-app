@@ -37,6 +37,8 @@ function reversiHandler(io, socket) {
   roomsHandlers(socket, 'reversi', roomsController, playersController, emitConnected)
 
   socket.on('reversi:playTurn', (row, col) => {
+    console.log('reversi:playTurn', { socketId: socket.id, row, col })
+
     const game = roomsController.getGame(socket.data.gameId)
     const playerColor = getKeyByValue(game.players, socket.data.playerId)
 
