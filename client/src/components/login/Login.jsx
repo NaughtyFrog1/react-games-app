@@ -7,8 +7,8 @@ import {
   InputGroup,
   ToggleButton,
 } from 'react-bootstrap'
-import { ReactComponent as RightArrow } from '../assets/bs-arrow-right.svg'
-import { isValidId } from '../helpers/validators'
+import { ReactComponent as RightArrow } from '../../assets/bs-arrow-right.svg'
+import { isValidId } from '../../helpers/validators'
 
 export default function Login() {
   const joinGameIdRef = useRef(null)
