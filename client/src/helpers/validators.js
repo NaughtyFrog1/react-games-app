@@ -1,4 +1,4 @@
-import { ID_ALPHABET, ID_SIZE } from '../constants'
+import { ID_ALPHABET, ID_SIZE } from 'constants'
 
 export function isValidId(id) {
   return (

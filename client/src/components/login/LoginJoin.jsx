@@ -1,21 +1,27 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Form, InputGroup } from 'react-bootstrap'
-import { ReactComponent as RightArrow } from '../../assets/bs-arrow-right.svg'
-import { isValidId } from '../../helpers/validators'
+import { ReactComponent as RightArrow } from 'assets/bs-arrow-right.svg'
+import { isValidId } from 'helpers/validators'
+import { SOCKET_EMITERS, useSocket } from 'contexts/SocketProvider'
 
 function LoginJoin({ validateGameType, formErrors, setFormErrors }) {
-  const joinGameIdRef = useRef(null)
+  const gameIdRef = useRef(null)
+  const socket = useSocket()
 
   function handleJoin() {
-    setFormErrors(validateJoin())
+    const errors = validateJoin()
+    setFormErrors(errors)
+    if (Object.keys(errors).length === 0) {
+      socket.emit(SOCKET_EMITERS.REVERSI.JOIN, gameIdRef.current.value)
+    }
   }
 
   function validateJoin() {
     const errors = validateGameType()
-    if (joinGameIdRef.current.value === '') {
+    if (gameIdRef.current.value === '') {
       errors.joinGameId = 'Game ID is required'
-    } else if (!isValidId(joinGameIdRef.current.value)) {
+    } else if (!isValidId(gameIdRef.current.value)) {
       errors.joinGameId = 'Invalid Game ID'
     }
     return errors
@@ -29,7 +35,7 @@ function LoginJoin({ validateGameType, formErrors, setFormErrors }) {
           placeholder="Game ID"
           type="text"
           name="joinGameId"
-          ref={joinGameIdRef}
+          ref={gameIdRef}
         />
         <Button
           className="lh-1"

@@ -1,27 +1,37 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Button, Form, InputGroup } from 'react-bootstrap'
-import { ReactComponent as RightArrow } from '../../assets/bs-arrow-right.svg'
-import { isValidId } from '../../helpers/validators'
+import { ReactComponent as RightArrow } from 'assets/bs-arrow-right.svg'
+import { isValidId } from 'helpers/validators'
+import { SOCKET_EMITERS, useSocket } from 'contexts/SocketProvider'
 
 function LoginReconnect({ validateGameType, formErrors, setFormErrors }) {
-  const reconnectGameIdRef = useRef(null)
-  const reconnectPlayerIdRef = useRef(null)
+  const gameIdRef = useRef(null)
+  const playerIdRef = useRef(null)
+  const socket = useSocket()
 
   function handleReconnect() {
-    setFormErrors(validateReconnect())
+    const errors = validateReconnect()
+    setFormErrors(errors)
+    if (Object.keys(errors).length === 0) {
+      socket.emit(
+        SOCKET_EMITERS.REVERSI.RECONNECT,
+        playerIdRef.current.value,
+        gameIdRef.current.value
+      )
+    }
   }
 
   function validateReconnect() {
     const errors = validateGameType()
-    if (reconnectGameIdRef.current.value === '') {
+    if (gameIdRef.current.value === '') {
       errors.reconnectGameId = 'Game ID is required'
-    } else if (!isValidId(reconnectGameIdRef.current.value)) {
+    } else if (!isValidId(gameIdRef.current.value)) {
       errors.reconnectGameId = 'Invalid Game ID'
     }
-    if (reconnectPlayerIdRef.current.value === '') {
+    if (playerIdRef.current.value === '') {
       errors.reconnectPlayerId = 'Player ID is required'
-    } else if (!isValidId(reconnectPlayerIdRef.current.value)) {
+    } else if (!isValidId(playerIdRef.current.value)) {
       errors.reconnectPlayerId = 'Invalid Player ID'
     }
     return errors
@@ -35,13 +45,13 @@ function LoginReconnect({ validateGameType, formErrors, setFormErrors }) {
           placeholder="Game ID"
           type="text"
           name="reconnectGameId"
-          ref={reconnectGameIdRef}
+          ref={gameIdRef}
         />
         <Form.Control
           placeholder="Player ID"
           type="text"
           name="reconnectPlayerId"
-          ref={reconnectPlayerIdRef}
+          ref={playerIdRef}
         />
         <Button
           className="lh-1"

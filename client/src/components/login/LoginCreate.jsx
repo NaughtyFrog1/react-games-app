@@ -1,10 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button } from 'react-bootstrap'
+import { SOCKET_EMITERS, useSocket } from 'contexts/SocketProvider'
 
 function LoginCreate({ validateGameType, setFormErrors }) {
+  const socket = useSocket()
+
   function handleCreate() {
-    setFormErrors(validateGameType())
+    const errors = validateGameType()
+    setFormErrors(errors)
+    if (Object.keys(errors).length === 0) {
+      socket.emit(SOCKET_EMITERS.REVERSI.CREATE)
+    }
   }
 
   return (
