@@ -1,17 +1,34 @@
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Login from 'components/login/Login'
 import Reversi from 'components/reversi/Reversi'
-import { SocketProvider } from 'contexts/SocketProvider'
+import { SOCKET_LISTENNERS, useSocket } from 'contexts/SocketProvider'
 
 export default function App() {
-  const [page, setPage] = useState('login')
+  const [page, setPage] = useState(<Login />)
+  const socket = useSocket()
 
-  let currentPage
-  if (page === 'login') {
-    currentPage = <Login />
-  } else if (page === 'reversi') {
-    currentPage = <Reversi />
-  }
+  const showReversiPage = useCallback(
+    (playerId, gameId, playerColor, turn, isPlayable, board) => {
+      setPage(
+        <Reversi
+          playerId={playerId}
+          gameId={gameId}
+          playerColor={playerColor}
+          initialTurn={turn}
+          initialIsPlayable={isPlayable}
+          initialBoard={board}
+        />
+      )
+    },
+    [setPage]
+  )
 
-  return <SocketProvider>{currentPage}</SocketProvider>
+  useEffect(() => {
+    if (socket == null) return
+    socket.on(SOCKET_LISTENNERS.REVERSI.CONNECTED, showReversiPage)
+    return () =>
+      socket.off(SOCKET_LISTENNERS.REVERSI.CONNECTED, showReversiPage)
+  }, [socket, showReversiPage])
+
+  return page
 }

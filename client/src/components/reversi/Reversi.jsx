@@ -1,7 +1,25 @@
 import React from 'react'
 
-export default function Reversi() {
+export default function Reversi({
+  playerId,
+  gameId,
+  playerColor,
+  initialTurn,
+  initialIsPlayable,
+  initialBoard,
+}) {
   return (
-    <div>Reversi</div>
+    <>
+      <pre>
+        {JSON.stringify({
+          playerId,
+          gameId,
+          playerColor,
+          initialTurn,
+          initialIsPlayable,
+          initialBoard,
+        }, null, 2)}
+      </pre>
+    </>
   )
 }
