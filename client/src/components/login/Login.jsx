@@ -30,7 +30,7 @@ export default function Login() {
   }
 
   return (
-    <section className="d-flex align-items-center histify-content-center h-100">
+    <section className="d-flex h-100">
       <Card className="m-auto p-4 border-0" style={{ width: '460px' }}>
         <Card.Body>
           <Card.Title className="mb-4 fs-1">React Games App</Card.Title>
