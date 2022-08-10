@@ -1,9 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-function ReversiPiece({ type, className = '' }) {
+function ReversiPiece({ type, className = '', onClick }) {
   return (
-    <div className={`piece ${className}`} data-piece-type={type}>
+    <div
+      className={`piece ${className}`}
+      data-piece-type={type}
+      onClick={onClick}
+    >
       <div className="piece__inner">
         <div className="piece__black"></div>
         <div className="piece__white"></div>
@@ -14,8 +18,9 @@ function ReversiPiece({ type, className = '' }) {
 }
 
 ReversiPiece.propTypes = {
-  type: PropTypes.oneOf(['', 'black', 'white', 'can-move']).isRequired,
+  type: PropTypes.string.isRequired,
   className: PropTypes.string,
+  onClick: PropTypes.func,
 }
 
 export default ReversiPiece
