@@ -5,6 +5,7 @@ import ReversiScoreboard from './ReversiScoreboard'
 import ReversiAlert from './ReversiAlert'
 import { SOCKET_LISTENNERS, useSocket } from 'contexts/SocketProvider'
 import ReversiBoard from './ReversiBoard'
+import GameInfo from 'components/ui/GameInfo'
 
 function Reversi({
   playerId,
@@ -79,6 +80,7 @@ function Reversi({
         />
       </div>
       <ReversiScoreboard turn={turn} playerColor={playerColor} board={board} />
+      <GameInfo playerId={playerId} gameId={gameId} />
     </div>
   )
 }
