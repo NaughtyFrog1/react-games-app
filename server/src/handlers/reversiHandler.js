@@ -38,7 +38,15 @@ function reversiHandler(io, socket) {
 
     console.log(
       'reversi:playTurn',
-      { socketId: socket.id, row, col, parsedRow, parsedCol },
+      {
+        socketId: socket.id,
+        playerId: socket.data.playerId,
+        gameId: socket.data.gameId,
+        row,
+        col,
+        parsedRow,
+        parsedCol,
+      },
       '\n'
     )
 
