@@ -1,5 +1,5 @@
 const path = require('path')
-const { ID_SIZE } = require('../constants')
+const { ID_SIZE } = require('../constants/idsConstants')
 const {
   createJsonFile,
   readJsonFile,

@@ -1,5 +1,5 @@
 const { customAlphabet } = require('nanoid')
-const { ID_ALPHABET } = require('../constants')
+const { ID_ALPHABET } = require('../constants/idsConstants')
 
 const nanoid = customAlphabet(ID_ALPHABET)
 
