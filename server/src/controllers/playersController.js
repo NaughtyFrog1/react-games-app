@@ -1,16 +1,9 @@
-const path = require('path')
+const { DIR_PLAYERS } = require('../constants/pathsConstants')
 const { ID_SIZE } = require('../constants/idsConstants')
-const {
-  createJsonFile,
-  readJsonFile,
-  writeJsonFile,
-} = require('../helpers/files.helper')
+const { readJsonFile, writeJsonFile } = require('../helpers/files.helper')
 const { getNewUniqueId } = require('../helpers/ids.helper')
 
-const DIR_PLAYERS = path.join(__dirname, '..', 'data', 'players.json')
 const connectedPlayers = {}
-
-createJsonFile(DIR_PLAYERS, [])
 
 function add(socketId) {
   const players = readJsonFile(DIR_PLAYERS)

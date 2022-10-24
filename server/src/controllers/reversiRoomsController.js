@@ -1,15 +1,7 @@
-const path = require('path')
+const { DIR_REVERSI } = require('../constants/pathsConstants')
 const { ID_SIZE } = require('../constants/idsConstants')
-const {
-  createJsonFile,
-  readJsonFile,
-  writeJsonFile,
-} = require('../helpers/files.helper')
+const { readJsonFile, writeJsonFile } = require('../helpers/files.helper')
 const { getNewUniqueId } = require('../helpers/ids.helper')
-
-const DIR_REVERSI = path.join(__dirname, '..', 'data', 'reversi.json')
-
-createJsonFile(DIR_REVERSI, {})
 
 function createGame(playerId) {
   const newGame = {

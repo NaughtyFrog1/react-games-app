@@ -1,10 +1,12 @@
 const express = require('express')
+const { DIR_REVERSI, DIR_PLAYERS } = require('./constants/pathsConstants')
 const app = express()
 const httpServer = require('http').Server(app)
 const io = require('socket.io')(httpServer, {
   cors: { origin: ['http://localhost:3000'] },
 })
 
+const { fileExists, createJsonFile } = require('./helpers/files.helper')
 const {
   reversiHandler,
   reversiDisconnect,
@@ -12,6 +14,8 @@ const {
 
 //* SETTINGS
 app.set('port', process.env.PORT || 3001)
+if (!fileExists(DIR_REVERSI)) createJsonFile(DIR_REVERSI, {})
+if (!fileExists(DIR_PLAYERS)) createJsonFile(DIR_PLAYERS, [])
 
 //* SOCKETS
 io.on('connection', (socket) => {

@@ -1,6 +1,10 @@
 const fs = require('fs')
 const path = require('path')
 
+function fileExists(dir) {
+  return fs.existsSync(dir)
+}
+
 function createJsonFile(dir, initialData) {
   if (!fs.existsSync(dir)) {
     if (!fs.existsSync(path.dirname(dir))) {
@@ -20,4 +24,4 @@ function writeJsonFile(dir, data) {
   fs.writeFileSync(dir, JSON.stringify(data))
 }
 
-module.exports = { createJsonFile, readJsonFile, writeJsonFile }
+module.exports = { fileExists, createJsonFile, readJsonFile, writeJsonFile }
