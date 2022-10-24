@@ -1,5 +1,4 @@
 const playersController = require('../controllers/playersController')
-const roomsHandlers = require('./roomsHandlers')
 const roomsController = require('../controllers/reversiRoomsController')
 const gameController = require('../controllers/reversiGameController')
 
@@ -19,38 +18,52 @@ function reversiHandler(io, socket) {
 
     socketsIds.forEach((socketId) => {
       if (socketId === socket.id) {
-        io.to(socketId).emit(
-          'reversi:connected',
+        io.to(socketId).emit('reversi:connected', {
           playerId,
           gameId,
           playerColor,
-          game.turn,
+          turn: game.turn,
           isPlayable,
-          board
-        )
+          board,
+        })
       } else if (socketId !== null) {
         io.to(socketId).emit('reversi:playerConnected')
       }
     })
   }
 
-  roomsHandlers(socket, 'reversi', roomsController, playersController, emitConnected)
+  function playTurn(row, col) {
+    const parsedRow = parseInt(row, 10)
+    const parsedCol = parseInt(col, 10)
 
-  socket.on('reversi:playTurn', (row, col) => {
-    console.log('reversi:playTurn', { socketId: socket.id, row, col })
+    console.log(
+      'reversi:playTurn',
+      { socketId: socket.id, row, col, parsedRow, parsedCol },
+      '\n'
+    )
+
+    if (isNaN(parsedRow) || isNaN(parsedCol)) {
+      socket.emit('reversi:error', ['Invalid data'])
+      return
+    }
 
     const game = roomsController.getGame(socket.data.gameId)
     const playerColor = getKeyByValue(game.players, socket.data.playerId)
 
     if (
       game.turn !== playerColor ||
-      !gameController.isValidMove(playerColor, game.board, row, col)
+      !gameController.isValidMove(playerColor, game.board, parsedRow, parsedCol)
     ) {
       socket.emit('reversi:error', ['Invalid move'])
       return
     }
 
-    const newBoard = gameController.makeMove(playerColor, game.board, row, col)
+    const newBoard = gameController.makeMove(
+      playerColor,
+      game.board,
+      parsedRow,
+      parsedCol
+    )
     const newTurn = gameController.getTurn(playerColor, newBoard)
     const updatedGame = roomsController.updateGame(
       socket.data.gameId,
@@ -70,12 +83,25 @@ function reversiHandler(io, socket) {
           : updatedGame.board
       )
     })
-  })
+  }
+
+  const roomsHandlers = require('./roomsHandlers')(
+    socket,
+    'reversi',
+    roomsController,
+    playersController,
+    emitConnected
+  )
+
+  socket.on('reversi:create', roomsHandlers.create)
+  socket.on('reversi:join', roomsHandlers.join)
+  socket.on('reversi:reconnect', roomsHandlers.reconnect)
+  socket.on('reversi:playTurn', playTurn)
 }
 
 function reversiDisconnect(io, socket) {
   playersController.disconnect(socket.data.playerId)
-  
+
   const game = roomsController.getGame(socket.data.gameId)
   const socketsIds = playersController.getSockets(Object.values(game.players))
   socketsIds.forEach((socketId) => {

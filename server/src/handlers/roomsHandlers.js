@@ -11,7 +11,7 @@ module.exports = (
     socket.data.gameId = gameId
   }
 
-  socket.on(`${gameType}:create`, () => {
+  function create() {
     console.log(`${gameType}:create`, { socketId: socket.id }, '\n')
 
     if (playersController.socketIsConnected(socket.id)) {
@@ -23,9 +23,9 @@ module.exports = (
     const newGameData = roomsController.createGame(newPlayerId)
     updateSocketData(newPlayerId, newGameData.id)
     emitConnected(newPlayerId, newGameData.id, newGameData.game)
-  })
+  }
 
-  socket.on(`${gameType}:join`, (gameId) => {
+  function join(gameId) {
     console.log(`${gameType}:join`, { socketId: socket.id, gameId }, '\n')
 
     const errors = []
@@ -46,16 +46,12 @@ module.exports = (
     const gameJoined = roomsController.joinGame(newPlayerId, gameId)
     updateSocketData(newPlayerId, gameId)
     emitConnected(newPlayerId, gameId, gameJoined)
-  })
+  }
 
-  socket.on(`${gameType}:reconnect`, (playerId, gameId) => {
+  function reconnect(playerId, gameId) {
     console.log(
       `${gameType}:reconnect`,
-      {
-        socketId: socket.id,
-        playerId,
-        gameId,
-      },
+      { socketId: socket.id, playerId, gameId },
       '\n'
     )
 
@@ -80,5 +76,7 @@ module.exports = (
     const game = roomsController.getGame(gameId)
     updateSocketData(playerId, gameId)
     emitConnected(playerId, gameId, game)
-  })
+  }
+
+  return { create, join, reconnect }
 }

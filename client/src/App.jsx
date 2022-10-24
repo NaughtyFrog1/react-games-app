@@ -8,7 +8,7 @@ export default function App() {
   const socket = useSocket()
 
   const showReversiPage = useCallback(
-    (playerId, gameId, playerColor, turn, isPlayable, board) => {
+    ({ playerId, gameId, playerColor, turn, isPlayable, board }) => {
       setPage(
         <Reversi
           playerId={playerId}
